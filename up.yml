@@ -1,3 +1,9 @@
 ---
+- name: install kubernetes
+  hosts: localhost
+  tasks:
+    - name: install kubernetes
+      ansible.builtin.pip: 
+        name: kubernetes
 - import_playbook: k8s/up.yml
 - import_playbook: gitea/up.yml
