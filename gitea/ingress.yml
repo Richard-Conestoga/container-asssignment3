@@ -10,7 +10,7 @@ metadata:
 spec:
   ingressClassName: nginx # This should match the name of your IngressClass
   rules:
-  # - host: gitea.k3p.dev
+  # - host: gitea.devsecmindset.dev
   - http:
       paths:
         - path: /
