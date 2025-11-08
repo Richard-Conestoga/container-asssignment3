@@ -1,7 +1,17 @@
 # Assignment 3 - Gitea Lab
-k8s gitea lab to take dev (sqlite based) to prod (mysql based)
 
-TLDR;
+
+This repository was created by using the template available at https://github.com/conestogac-acsit/cdevops-gitea.git
+
+Firstly, go to the repository above, click on "Use this template" and then "Create a new repository"
+
+Clone the repository you just created using the command:
+
+```bash
+git clone <<url>>
+```
+
+After cloning it, start the steps to install the system:
 
 ```bash
 pyenv install 3
@@ -11,7 +21,7 @@ git submodule update --init --recursive
 ansible-playbook up.yml
 ```
 
-Wait until `kubectl get pod` shows all pods running and check the Cloudflare Tunnel List:
+Wait until `kubectl get pod` shows all pods running, and check the Cloudflare Tunnel List:
 
 ```bash
 cloudflared tunnel list
@@ -23,13 +33,13 @@ Check your Cloudflare ID on the list and:
 cloudflared tunnel route dns <<CLOUDFLARE_ID>> <<HOST>>
 ```
 
-Edit your config file to reflet your hosts list:
+Edit your config file to reflect your hosts list:
 
 ```bash
 sudo nano /etc/cloudflared/config.yml
 ```
 
-This is how this config file looks like:
+This is how this config file looks:
 
 ```bash
 tunnel: <<CLOUDFLARE_ID>>
@@ -85,12 +95,38 @@ ingress-nginx-controller             LoadBalancer   10.43.124.80    10.172.27.3 
 
 ```
 
-If any of the Sanity check fail, restart Kubernetes:
+If any of the Sanity checks fail, restart Kubernetes:
 
 ```bash
 ansible-playbook down.yml
 ansible-playbook up.yml
 ```
 
-Double check the sanity check to make sure everything is running fine:
-Try to reach your Gitea server using another tab in your browser.
+Double-check the sanity check to make sure everything is running fine:
+Try to reach your Gitea server using another tab in your browser using your URL.
+
+## Gitea Data Persistence
+
+
+Install MySQL for Gitea
+
+```bash
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo update
+helm install gitea-mysql bitnami/mysql \
+  --set auth.rootPassword=root123 \
+  --set auth.database=gitea \
+  --set auth.username=gitea \
+  --set auth.password=gitea_pass \
+  --set primary.persistence.enabled=true \
+  --set primary.persistence.size=5Gi
+```
+
+Deploy Gitea in Production Mode
+
+```bash
+helm install gitea-prod gitea-charts/gitea -f gitea/values.yaml
+```
+
+Now you are good to go. Start enjoying your selfhosted Gitea.
+
