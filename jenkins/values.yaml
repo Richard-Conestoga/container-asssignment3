@@ -1,0 +1,36 @@
+persistence:
+  enabled: true
+  size: 20Gi
+  accessMode: ReadWriteOnce
+  storageClass: "standard"
+
+controller:
+  image: "jenkins/jenkins"
+  tag: "lts"
+  adminUser: "admin"
+  adminPassword: "ChangeMeStrongPassword!"
+  serviceType: ClusterIP   # or LoadBalancer if you want external access
+
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "256Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+
+  installPlugins:
+    - kubernetes:latest
+    - git:latest
+    - workflow-aggregator:latest
+    - configuration-as-code:latest
+
+  JCasC:
+    configScripts:
+      welcome-message: |
+        jenkins:
+          systemMessage: "Welcome to Jenkins in Kubernetes, deployed with Ansible!"
+
+service:
+  type: ClusterIP
+  port: 8080

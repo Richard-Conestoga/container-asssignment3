@@ -1,0 +1,9 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Remove Jenkins release and wait for deletion to complete
+      kubernetes.core.helm:
+        name: jenkins
+        release_namespace: default
+        state: absent
+        wait: true

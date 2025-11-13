@@ -1,0 +1,16 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Add Jenkins Helm repo
+      kubernetes.core.helm_repository:
+        name: jenkins
+        repo_url: "https://charts.jenkins.io"
+
+    - name: Deploy Jenkins via Helm
+      kubernetes.core.helm:
+        name: jenkins
+        chart_ref: jenkins/jenkins
+        release_namespace: default
+        create_namespace: true
+        values_files:
+          - values.yaml

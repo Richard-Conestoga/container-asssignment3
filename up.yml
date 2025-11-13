@@ -7,3 +7,4 @@
         name: kubernetes
 - import_playbook: k8s/up.yml
 - import_playbook: gitea/up.yml
+- import_playbook: jenkins/up.yml
