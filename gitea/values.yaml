@@ -3,7 +3,7 @@ persistence:
   size: 20Gi
   accessModes:
     - ReadWriteOnce
-  storageClass: "standard"
+  storageClass: "local-path"
 
 gitea:
   admin:
@@ -13,11 +13,11 @@ gitea:
 
   config:
     database:
-      DB_TYPE: mysql
-      HOST: "gitea-mysql.default.svc.cluster.local:3306"
+      DB_TYPE: postgres
+      HOST: "gitea-prod-postgresql-ha-pgpool.default.svc.cluster.local:5432"
       NAME: gitea
       USER: gitea
-      PASSWD: gitea_pass
+      PASSWD: gitea
       SSL_MODE: disable
 
     server:
