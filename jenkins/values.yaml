@@ -1,23 +1,15 @@
-persistence:
-  enabled: true
-  size: 20Gi
-  accessMode: ReadWriteOnce
-  storageClass: "standard"
-
 controller:
-  image: "jenkins/jenkins"
-  tag: "lts"
-  adminUser: "admin"
-  adminPassword: "ChangeMeStrongPassword!"
-  serviceType: ClusterIP   # or LoadBalancer if you want external access
+  image:
+    registry: "docker.io"
+    repository: "jenkins/jenkins"
+    tag: "lts"
+    pullPolicy: "IfNotPresent"
 
-  resources:
-    requests:
-      cpu: "100m"
-      memory: "256Mi"
-    limits:
-      cpu: "500m"
-      memory: "512Mi"
+  admin:
+    username: "admin"
+    password: "ChangeMeStrongPassword!"
+
+  serviceType: ClusterIP
 
   installPlugins:
     - kubernetes:latest
@@ -30,6 +22,12 @@ controller:
       welcome-message: |
         jenkins:
           systemMessage: "Welcome to Jenkins in Kubernetes, deployed with Ansible!"
+
+persistence:
+  enabled: true
+  size: 10Gi
+  accessMode: ReadWriteOnce
+  storageClass: "local-path"
 
 service:
   type: ClusterIP
