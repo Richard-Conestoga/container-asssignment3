@@ -1,0 +1,103 @@
+gitea:
+  admin:
+    email: admin@gitea.devsecmindset.dev
+    password: ChangeMeStrongPassword!
+    username: admin
+  config:
+    database:
+      DB_TYPE: postgres
+      HOST: gitea-prod-postgresql-ha-pgpool.default.svc.cluster.local:5432
+      NAME: gitea
+      PASSWD: gitea
+      SSL_MODE: disable
+      USER: gitea
+    server:
+      DOMAIN: gitea.devsecmindset.dev
+      HTTP_PORT: 3000
+      ROOT_URL: https://gitea.devsecmindset.dev/
+      SSH_DOMAIN: gitea.devsecmindset.dev
+      SSH_PORT: 22
+    service:
+      DISABLE_REGISTRATION: true
+  resources:
+    limits:
+      cpu: 500m
+      memory: 768Mi
+    requests:
+      cpu: 250m
+      memory: 512Mi
+  image:
+    registry: docker.io
+    repository: gitea/gitea
+    tag: 1.24.6
+    pullPolicy: IfNotPresent
+
+persistence:
+  accessModes:
+  - ReadWriteOnce
+  enabled: true
+  size: 20Gi
+  storageClass: local-path
+service:
+  http:
+    port: 3000
+    type: ClusterIP
+  ports:
+    http: 80
+ssh:
+  enabled: true
+  service:
+    port: 22
+    type: ClusterIP
+
+postgresql-ha:
+  primary:
+    persistence:
+      storageClass: truenas-nfs
+    image:
+      repository: postgres 
+      tag: 16.1
+  replica:
+    persistence:
+      storageClass: truenas-nfs
+    image:
+      repository: postgres
+      tag: 16.1 
+
+pdb:
+  create: false
+
+networkPolicy:
+  enabled: false
+
+externalDatabase:
+  existingSecret: ""
+
+volumePermissions:
+  enabled: false 
+#  image:
+#    registry: docker.io
+#    repository: bitnami/kubectl
+#    tag: 1.29.1
+#    pullPolicy: IfNotPresent
+
+nodeAffinityPreset:
+  type: ""
+  key: ""
+  values: []
+
+resourcesPreset: "nano"
+
+containerPorts:
+  http: 3000
+
+openid:
+  enabled: false
+  enableSignIn: false
+
+gitea:
+  enabled: true
+
+global:
+  security:
+    allowInsecureImages: true

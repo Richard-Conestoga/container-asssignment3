@@ -5,6 +5,7 @@
     kubernetes.core.helm_repository:
       name: gitea-charts
       repo_url: "https://dl.gitea.com/charts/"
+  
   - name: Deploy latest version of gitea
     kubernetes.core.helm:
       name: gitea-prod

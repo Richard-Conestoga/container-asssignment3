@@ -10,13 +10,13 @@ metadata:
 spec:
   ingressClassName: nginx # This should match the name of your IngressClass
   rules:
-  # - host: gitea.devsecmindset.dev
+  - host: gitea.devsecmindset.dev
   - http:
       paths:
         - path: /
           pathType: Prefix
           backend:
             service:
-              name: gitea-http
+              name: gitea-prod-http
               port:
                 number: 3000

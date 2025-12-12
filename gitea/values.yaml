@@ -1,16 +1,54 @@
-persistence:
+image:
+  registry: docker.io
+  repository: gitea/gitea
+  tag: 1.22.3
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+
+service:
+  type: ClusterIP
+  ports: 
+    http: 3000
+  ssh:
+    enabled: true
+    service:
+      type: ClusterIP
+      port: 22
+
+postgresql-ha:
   enabled: true
-  size: 20Gi
-  accessModes:
-    - ReadWriteOnce
-  storageClass: "local-path"
+  
+  pgpool:
+    resources:
+      limits:
+        memory: 768Mi
+      requests:
+        memory: 512Mi
+  
+  persistence:
+    storageClass: "truenas-nfs"
+    size: 10Gi
+    accessModes:
+      - ReadWriteOnce
+    
+  global:
+    storageClass: "truenas-nfs"
 
 gitea:
   admin:
-    username: admin
+    username: gitea-admin
     password: "ChangeMeStrongPassword!"
     email: "admin@gitea.devsecmindset.dev"
-
+  
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: 500m
+      memory: 768Mi
+  
   config:
     database:
       DB_TYPE: postgres
@@ -19,24 +57,40 @@ gitea:
       USER: gitea
       PASSWD: gitea
       SSL_MODE: disable
-
     server:
       ROOT_URL: "https://gitea.devsecmindset.dev/"
       DOMAIN: "gitea.devsecmindset.dev"
       SSH_DOMAIN: "gitea.devsecmindset.dev"
       HTTP_PORT: 3000
       SSH_PORT: 22
-
     service:
       DISABLE_REGISTRATION: true
+  
+  initContainers:
+    enabled: false
+  
+  createSecret: false
+#  existingSecret: gitea-prod
 
-service:
-  http:
-    type: ClusterIP
-    port: 3000
-
-ssh:
+persistence:
   enabled: true
-  service:
-    type: ClusterIP
-    port: 22
+  size: 20Gi
+  accessModes:
+    - ReadWriteOnce
+  storageClass: "local-path"
+
+pdb:
+  create: false 
+  minAvailable: 1
+
+networkPolicy:
+  enabled: false 
+
+externalDatabase:
+  existingSecret: ""
+
+volumePermissions:
+  enabled: false 
+
+global:
+  imagePullSecrets: []
