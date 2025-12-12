@@ -18,6 +18,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: jenkins
+                name: jenkins-prod
                 port:
                   number: 8080

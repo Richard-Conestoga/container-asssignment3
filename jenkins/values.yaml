@@ -5,6 +5,14 @@ controller:
     tag: "lts"
     pullPolicy: "IfNotPresent"
 
+  resources:
+      requests:
+        cpu: 500m
+        memory: 1024Mi # Request 1 GB guaranteed
+      limits:
+        cpu: 1000m
+        memory: 1536Mi
+
   admin:
     username: "admin"
     password: "ChangeMeStrongPassword!"

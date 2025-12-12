@@ -1,0 +1,7 @@
+postgresql:
+  postgresqlPrimary:
+    persistence:
+      storageClassName: truenas-nfs
+  postgresqlReplica:
+    persistence:
+      storageClassName: truenas-nfs
